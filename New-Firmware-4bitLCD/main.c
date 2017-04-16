@@ -255,4 +255,5 @@ uint16_t measure_supply(void) {
 	return (ADC);
 	//return (1100UL*1023/ADC);     // AVcc = Vbg/ADC*1023 = 1.1V*1023/ADC 
 	//return ((ADC << 1) + (ADC >> 1));
+	//test
 }
