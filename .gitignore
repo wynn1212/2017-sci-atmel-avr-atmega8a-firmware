@@ -7,6 +7,12 @@
 # Precompiled Headers
 *.gch
 *.pch
+*.dep/
+*.eep
+*.lss
+*.lst
+*.map
+*.sym
 
 # Libraries
 *.lib
