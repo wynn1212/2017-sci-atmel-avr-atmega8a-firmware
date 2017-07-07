@@ -13,7 +13,8 @@
 #include "init.c"
 #include "uart.c"
 #include "keypad.c"
-
+#include "eeprom.c"
+char str[32];
 /* ------------------------------------------------------------------------- */
 ISR (TIMER0_OVF_vect){						// timer0 overflow interrupt
 	uchar   i;
@@ -51,10 +52,10 @@ ISR(INT1_vect){
 }
  
 int main(void){	
-	uchar temp1,c = 'a';
+	uchar temp1;
 	System_init();
-	printi("\n\rAtmega8A Started.\n\r",0);
-	printi("Atmega8A UART debug console at 115200 bps initialization successful.\n\r",0);
+	printi("\n\rI:Atmega8A OK.\n\r",0);
+	printi("I:Atmega8A UART dbgtty at 115200bps .\n\r",0);
 	show_logo1();
 	show_logo2();
 	GICR = 1<<INT1;					// Enable INT1
@@ -72,33 +73,62 @@ int main(void){
 					printi("\n\r Freq = %d",kfreq);
 					printi(".%d KHz \n\r",freq%1000);
 				}else{
-					printi("\n\rError: fcauto is on, please type 'a' to disable it.\n\r",0);
+					printi("\n\rE:fcauto=on,type 'a' to off.\n\r",0);
 				}
 			}
+			
 			if (temp1 =='c'){
 				if(!fcauto){
 					TCCR1B = 0x02;						//Cycle Ext INT1
 					fcmode = 0;							//Cycle mode ON
-					printi("\n\r Cycle = %d us\n\r",cycle);
+					printi("\n\rI:Cycle = %d us\n\r",cycle);
 				}else{
-					printi("\n\rError: fcauto is on, please type 'a' to disable it.\n\r",0);
+					printi("\n\rE:fcauto=on,type 'a' to off.\n\r",0);
 				}
+			}
+			if (temp1 =='e'){
+				printi("\n\rI:Writing to EEPROM...",0);
+				eeprom_string_write("This is a 1st EEPROM data",0);
+				eeprom_string_write("2nd",1);
+				eeprom_string_write("3rd",2);
+				eeprom_string_write("4th",3);
+				eeprom_string_write("5th",4);
+				printi("Completed.\n\r",0);
+			}
+			if (temp1 =='r'){
+				printi("\n\r Read EE ",0);
+				printi("Completed.\n\r",0);
+				printi("\n\rEEPROM:",0);
+				eeprom_string_read(0);  //--------------------------------------
+				printi( &str[0] ,0);
+				eeprom_string_read(1);  //--------------------------------------
+				printi( &str[32] ,0);
 			}
 			if (temp1 =='a'){
 				if(fcauto){
-					printi("\n\rfcauto: OFF!\n\r",0);
+					printi("\n\rI:fcauto: OFF!\n\r",0);
 					fcauto = 0;
 				}else if(!fcauto){
-					printi("\n\rfcauto: ON!\n\r",0);
+					printi("\n\rI:fcauto: ON!\n\r",0);
 					fcauto = 1;
 				}
 			}
-			if (temp1 =='t'){
+			if (temp1 =='v'){
+				if(Vauto){
+					printi("\n\rI:Vauto: OFF!\n\r",0);
+					Vauto = 0;
+				}else if(!Vauto){
+					printi("\n\rI:Vauto: ON!\n\r",0);
+					Vauto = 1;
+				}
+			}
+			/*if (temp1 =='t'){
+				uchar c = 'a';
 				printi("\n\r My c Hex is = %x ", c);
 				printi("\n\r My c HeX is = %X ", c);
 				printi("\n\r My c Dec is = %d ", c);
 				printi("\n\r My c Chr is = %c \n\r", c);
-			}
+			}*/
 			/*if (temp1 =='v'){
 				printi("\n\r Voltage = %d ", voltage);
 			}*/
@@ -113,7 +143,7 @@ int main(void){
 			//if(scan_value < 18)process_keyin(scan_value); 
 			key = GetKeyPressed();
 			if ( key ) {
-				printi("\n\r key Received!",0);			//key to UART
+				printi("\n\rI:keyed!",0);			//key to UART
 				putchar( key+0x30 );
 				DISP_Hex(0x8A,key);
 			}
@@ -158,9 +188,10 @@ int main(void){
 				DISP_Int(LINE1-2,cycle);
 				DISP_Str(LINE1+6,"us");
 			}
-			voltage = measure_supply();
-			printi("\n\r Voltage = %d ", voltage);
-			
+			if (Vauto){
+				voltage = measure_supply();
+				printi("\n\rI:V= %d ", voltage);
+			}
 			Job_Clock();
 				XOR_RUNLED; //problem
 		}  
@@ -173,11 +204,11 @@ int main(void){
 				cmd = INdata[1];
 				if (cmd == 1 ){
 					Set_Clock(INdata[5],INdata[6],INdata[7]);
-					printi("Clock Received!\n\r",0);
+					printi("Clock RX!\n\r",0);
 					CmdOut = 1;
 				}else if(cmd == 2){
 					CmdOut = 2;
-					printi("Clock Transfered!\n\r",0);
+					printi("Clk TX\n\r",0);
 				}
 			}	
 		}

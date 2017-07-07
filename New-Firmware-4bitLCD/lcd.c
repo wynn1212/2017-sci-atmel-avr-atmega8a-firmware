@@ -4,10 +4,10 @@
 
 /*   =======  硬體接腳的定義  =============  */
 #define DBPORT PORTC						//PC0~PC3  
-#define CTPORT PORTB 
+#define CTPORT PORTC 
 #define E_INDEX  0x01						//bit0
-#define RS_INDEX 0x02						//bit1
-#define RW_INDEX 0x04						//bit2
+#define RS_INDEX 0x0f						//bit4
+#define RW_INDEX 0x00						//no-bit
 #define dT 20
 
 void LCD_CMD(char cmd);

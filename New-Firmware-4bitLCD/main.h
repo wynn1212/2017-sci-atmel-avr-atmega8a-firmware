@@ -1,12 +1,13 @@
 // Initialization require header files.
+
 #include <avr/io.h>
 #include <avr/wdt.h>
 #include <avr/interrupt.h>  /* for sei() */
 #include <util/delay.h>     /* for _delay_ms() */
-#include <avr/eeprom.h>
 #include <avr/pgmspace.h>   /* required by usbdrv.h */
 #include "usbdrv/usbdrv.c"
 #include "usbdrv/oddebug.c"        /* This is also an example for using debug macros */
+#include <avr/eeprom.h>			/*EEPROM support.*/
 #define LED_NUM  1
 #define XOR_RUNLED PORTD ^= 0x01
 #define  byte unsigned char
@@ -53,6 +54,7 @@ void process_show(void);
 
 /* Begin of ¥þ°ìÅÜ¼Æ */
 uint16_t voltage;
+void eeprom_string_read(int record);
 unsigned int freq,cycle,cycletmp;
 uchar kfreq;
 uchar scan_line, scan_in, scan_value, scan_last,count2;
@@ -90,6 +92,7 @@ void vbmode(void);
 /* Begin of bool */
 char fcmode = 1; //(freq=1,cycle=0)
 char fcauto = 1;
+char Vauto = 0;
 char autocount = 0;
 /* End of bool */
 uchar key;
