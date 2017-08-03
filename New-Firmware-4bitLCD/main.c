@@ -14,76 +14,72 @@
 #include "uart.c"
 #include "keypad.c"
 #include "eeprom.c"
+
 char str[32];
 /* ------------------------------------------------------------------------- */
 ISR (TIMER0_OVF_vect){						// timer0 overflow interrupt
 	uchar   i;
-	static uchar fcount = 0;
 		
 	TCNT0 = 22;  						// event to be exicuted every 5ms here
 	
-	if (fcmode == 1){						//Freq mode ON
-		if(!--fcount){
-			fcount = 200;
-			//freq = TCNT1H * 256 + TCNT1L;
-			freq = TCNT1;
-			TCNT1 = 0;
-			kfreq = freq/1000;
-			//TCNT1H = 0;
-			//TCNT1L = 0;
-		}
-	}
-	
-    
 	for(i=0;i<10;i++){
 		if(timer[i]>0)timer[i]--;           
 	}    
 }
-//
-ISR (TIMER1_OVF_vect){						// timer0 overflow interrupt
-	//TCNT1 = t1cnt;              
-	//PORTC = PORTC ^ 0x40;					//PC6 接 BEEP   腳位更改點  
-}
+
 ISR(INT1_vect){
-	if(fcmode == 0){							//Cycle mode ON
-		cycletmp = TCNT1;
-		TCNT1 = 0;
-	}
+
 }
+	
+ISR (TIMER1_OVF_vect){						// timer0 overflow interrupt
+	TCNT1 = t1cnt;              
+	PORTB ^= 0x02;					//PB1 接 BEEP   腳位更改點  
+	//PORTC ^= 0x02;
+}
+
  
 int main(void){	
 	uchar temp1;
 	System_init();
+	printi("8\n\r",0);
 	printi("\n\rI:Atmega8A OK.\n\r",0);
 	printi("I:Atmega8A UART dbgtty at 115200bps .\n\r",0);
 	show_logo1();
 	show_logo2();
-	GICR = 1<<INT1;					// Enable INT1
-	MCUCR = 1<<ISC11 | 1<<ISC10;	// Trigger INT1 on rising edge
+	//GICR = 1<<INT1;					// Enable INT1
+	//MCUCR = 1<<ISC11 | 1<<ISC10;	// Trigger INT1 on rising edge
 	for(;;){          						/* main event loop */   
 		wdt_reset();
 		usbPoll();
-		if (kbhit()){
+		/*if (kbhit()){
 			temp1=USARTReadChar();
 			USARTWriteChar(temp1);
-			if (temp1 =='f'){
-				if(!fcauto){
-					TCCR1B = 0x06;						//Freq Ext Clock
-					fcmode = 1;							//Freq mode ON
-					printi("\n\r Freq = %d",kfreq);
-					printi(".%d KHz \n\r",freq%1000);
-				}else{
-					printi("\n\rE:fcauto=on,type 'a' to off.\n\r",0);
+			static int beep=0;
+			if (temp1 =='0')TIMSK &= (0 << TOIE1);
+			if (temp1 =='z')lb(261);
+			if (temp1 =='x')lb(293);
+			if (temp1 =='c')lb(329);
+			if (temp1 =='v')lb(349);
+			if (temp1 =='b')lb(392);
+			if (temp1 =='n')lb(440);
+			if (temp1 =='m')lb(493);
+			if (temp1 ==',')lb(523);
+			if (temp1 =='s')lb(277);
+			if (temp1 =='d')lb(311);
+			if (temp1 =='g')lb(369);
+			if (temp1 =='h')lb(415);
+			if (temp1 =='j')lb(466);
+			if (temp1 =='9')lb(5000);
+			if (temp1 =='+'){
+				for(i=0;i<=10;i++){
+					lb(++beep);
+					printi("ToneFreq = %d\n\r",beep);
 				}
 			}
-			
-			if (temp1 =='c'){
-				if(!fcauto){
-					TCCR1B = 0x02;						//Cycle Ext INT1
-					fcmode = 0;							//Cycle mode ON
-					printi("\n\rI:Cycle = %d us\n\r",cycle);
-				}else{
-					printi("\n\rE:fcauto=on,type 'a' to off.\n\r",0);
+			if (temp1 =='-'){
+				for(i=0;i<=10;i++){
+					lb(--beep);
+					printi("ToneFreq = %d\n\r",beep);
 				}
 			}
 			if (temp1 =='e'){
@@ -104,38 +100,8 @@ int main(void){
 				eeprom_string_read(1);  //--------------------------------------
 				printi( &str[32] ,0);
 			}
-			if (temp1 =='a'){
-				if(fcauto){
-					printi("\n\rI:fcauto: OFF!\n\r",0);
-					fcauto = 0;
-				}else if(!fcauto){
-					printi("\n\rI:fcauto: ON!\n\r",0);
-					fcauto = 1;
-				}
-			}
-			if (temp1 =='v'){
-				if(Vauto){
-					printi("\n\rI:Vauto: OFF!\n\r",0);
-					Vauto = 0;
-				}else if(!Vauto){
-					printi("\n\rI:Vauto: ON!\n\r",0);
-					Vauto = 1;
-				}
-			}
-			/*if (temp1 =='t'){
-				uchar c = 'a';
-				printi("\n\r My c Hex is = %x ", c);
-				printi("\n\r My c HeX is = %X ", c);
-				printi("\n\r My c Dec is = %d ", c);
-				printi("\n\r My c Chr is = %c \n\r", c);
-			}*/
-			/*if (temp1 =='v'){
-				printi("\n\r Voltage = %d ", voltage);
-			}*/
 			if ( temp1 == CR ) USARTWriteChar( LF );
-			DISP_Chr(LINE1+1,temp1);
-			DISP_Hex(0x8A,temp1);
-		}
+		}*/
 		
 		if(timer[0] ==0){					//5ms x 6 = 30ms, 鍵盤掃描時間
 			timer[0] = 6;    
@@ -143,28 +109,16 @@ int main(void){
 			//if(scan_value < 18)process_keyin(scan_value); 
 			key = GetKeyPressed();
 			if ( key ) {
-				printi("\n\rI:keyed!",0);			//key to UART
+				//printi("\n\rI:keyed!",0);			//key to UART
 				putchar( key+0x30 );
-				DISP_Hex(0x8A,key);
+				//DISP_Hex(0x8A,key);
 			}
 		}   	  
 		if(timer[1] ==0){					//5ms x 200 = 1s 上數
 			timer[1] = 200; 			 
-			if (fcauto){
-				if(autocount == 5){
-					if(!fcmode){
-						fcmode = 1;
-					}else{
-						fcmode = 0;
-					}
-					autocount = 0;
-				}else{
-					++autocount;
-				}
-			}
 			if(disp_mode == 0 && !bKeybusy ){
-				DISP_Str(0x80,"105");                                       
-				DISP_Str(0xC0,"NHSSC");
+				DISP_Str(0x80,"105   ");                                       
+				DISP_Str(0xC0,"NHSSC ");
 				DISP_Str(0x89,"ST:15");
 				show_logo1();    	            	
 			}else if(disp_mode == 1  && !bKeybusy ){
@@ -175,23 +129,7 @@ int main(void){
 				DISP_Chr(0xCB, 0x30 | (i/10));
 				DISP_Chr(0xCC, 0x30 | (i%10));
 			}
-			DISP_Str(LINE1,"       ");
-			if(fcmode == 1){
-				TCCR1B = 0x06;						//Freq Ext Clock
-				DISP_Int(LINE1-6,kfreq);
-				DISP_Str(LINE1+2,".");
-				DISP_Int(LINE1-2,freq%1000);
-				DISP_Str(LINE1+6,"KHz");
-			}else if (fcmode == 0){
-				TCCR1B = 0x02;						//Cycle Ext INT1
-				cycle = (cycletmp/3)<<1;
-				DISP_Int(LINE1-2,cycle);
-				DISP_Str(LINE1+6,"us");
-			}
-			if (Vauto){
-				voltage = measure_supply();
-				printi("\n\rI:V= %d ", voltage);
-			}
+			
 			Job_Clock();
 				XOR_RUNLED; //problem
 		}  
@@ -208,10 +146,22 @@ int main(void){
 					CmdOut = 1;
 				}else if(cmd == 2){
 					CmdOut = 2;
-					printi("Clk TX\n\r",0);
+					printi("Clock TX\n\r",0);
+				}else if(cmd == 3){
+					EEPROM_write(INdata[2],0);
+					EEPROM_write(INdata[3],1);
+					EEPROM_write(INdata[4],2);
+					EEPROM_write(INdata[5],3);
+					EEPROM_write(INdata[6],4);
+					EEPROM_write(INdata[7],5);
+					CmdOut = 1;
 				}
 			}	
 		}
+		/*if(timer[3] == 0){
+			timer[3] = 1;
+			PORTC ^= 0x08;
+		}*/
 	}
 	return 0;
 }
@@ -226,10 +176,10 @@ void init_timer(void){
 	TCNT0 = 22; 	
 
 	//timer1  ext T1
-	//TCCR1B |= (1 << CS10);					// set prescaler to No prescaling
+	TCCR1B |= (1 << CS10);					// set prescaler to No prescaling
 	
 	
-	//TCNT1 = 0;
+	TCNT1 = 0;
 }
 void trans_number(void){
 	if (key == 1) realnumber = 1;
@@ -247,8 +197,8 @@ void vbmode(void){
 
 /* Begin of Clock*/
 void Job_Clock(void){
-	DISP_Str(0xc6,":");	//顯示冒號
-	DISP_Str(0xc3,":");	//顯示冒號
+	/*DISP_Str(0xc6,":");	//顯示冒號
+	DISP_Str(0xc3,":");	//顯示冒號*/
 	if (++count >= 1){ 						//0.5s*2 = 1s
 		count = 0;
 		if (++sec >= 60){ 						//60s = 1m
@@ -259,26 +209,26 @@ void Job_Clock(void){
 			}
 		}
 	}
-	if (sec < 10)DISP_Str(LINE2+7,"0");		//如果秒數小於10擇十位數多放個0
+	/*if (sec < 10)DISP_Str(LINE2+7,"0");		//如果秒數小於10擇十位數多放個0
 	if (min < 10)DISP_Str(LINE2+4,"0");		//如果分數小於10擇十位數多放個0
 	if (hour < 10)DISP_Str(LINE2+1,"0");		//如果時數小於10擇十位數多放個0
 	DISP_Dec(LINE2+8,sec);						//顯示秒
 	DISP_Dec(LINE2+5,min);						//顯示分
-	DISP_Dec(LINE2+2,hour);						//顯示時
+	DISP_Dec(LINE2+2,hour);*/						//顯示時
 }
 
 void Set_Clock(uchar shour, uchar smin, uchar ssec){
 	hour = shour;
 	min = smin;
 	sec = ssec;
-	DISP_Dec(LINE1+8,ssec);						//顯示秒
+	/*DISP_Dec(LINE1+8,ssec);						//顯示秒
 	DISP_Dec(LINE1+5,smin);						//顯示分
-	DISP_Dec(LINE1+2,shour);					//顯示時
+	DISP_Dec(LINE1+2,shour);*/					//顯示時
 }
 
 /* End of Clock*/
 
-uint16_t measure_supply(void) {
+/*uint16_t measure_supply(void) {
 	ADMUX &= ~(ADMUX_REFMASK | ADMUX_ADCMASK);
 	ADMUX |= ADMUX_REF_VBG;      // select AVCC as reference
 	ADMUX |= ADMUX_ADC_VBG;       // measure bandgap reference voltage
@@ -287,4 +237,4 @@ uint16_t measure_supply(void) {
 	//return (1100UL*1023/ADC);     // AVcc = Vbg/ADC*1023 = 1.1V*1023/ADC 
 	//return ((ADC << 1) + (ADC >> 1));
 	//test 123
-}
+}*/

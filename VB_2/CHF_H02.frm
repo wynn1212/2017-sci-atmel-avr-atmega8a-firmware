@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin VB.Form frmMain 
    Caption         =   "105學年度  工業類科學生技藝競賽  電腦修護職種   第二站  崗位號碼:15          "
-   ClientHeight    =   5460
+   ClientHeight    =   6090
    ClientLeft      =   195
    ClientTop       =   420
-   ClientWidth     =   9720
+   ClientWidth     =   9600
    FillColor       =   &H000000FF&
    FillStyle       =   0  '實心
    BeginProperty Font 
@@ -19,10 +19,18 @@ Begin VB.Form frmMain
    ForeColor       =   &H000000FF&
    KeyPreview      =   -1  'True
    LinkTopic       =   "Form1"
-   ScaleHeight     =   5460.387
+   ScaleHeight     =   6090.432
    ScaleMode       =   0  '使用者自訂
-   ScaleWidth      =   9716.548
+   ScaleWidth      =   9596.591
    StartUpPosition =   2  '螢幕中央
+   Begin VB.CommandButton w_eep 
+      Caption         =   "Write"
+      Height          =   495
+      Left            =   360
+      TabIndex        =   16
+      Top             =   5280
+      Width           =   1455
+   End
    Begin VB.CommandButton Command3 
       Caption         =   "AVR->PC"
       Height          =   495
@@ -308,6 +316,9 @@ Private Sub USBfunc(ByVal mode As String, ByVal IsWrite As Boolean)
                 ElseIf (mode = "led") Then
                     ready = 0
                     OutDataEightByte 0, &H1, 0, 0, 0, shour, smin, ssec 'Not Done
+                ElseIf (mode = "w_eep") Then
+                    ready = 0
+                    OutDataEightByte 0, &H3, "G", "T", "A", "V", ":", ")" 'Not Done
                 Else
                     MsgBox ("Illegial Instruction, Invaild Operation")
                 End If
@@ -374,3 +385,6 @@ errHandler:
     Unload Forms(0)
 End Sub
 
+Private Sub w_eep_Click()
+    Call USBfunc("w_eep", True)
+End Sub

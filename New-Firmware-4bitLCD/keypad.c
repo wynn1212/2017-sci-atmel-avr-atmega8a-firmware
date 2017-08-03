@@ -11,7 +11,7 @@ uchar GetKeyPressed( void ){
 	if ( !pressed ){
 		for (r=0; r<4; r++){
 			ch = ~(1<<r);
-			PORTC = (PORTC | 0x0F) & ch;
+			PORTC = (PORTC | 0x3C) & ch;
 			for (c=0; c<4; c++){
 				ch = (0x04<<c);
 				if(!(PINB & ch)){
@@ -23,7 +23,7 @@ uchar GetKeyPressed( void ){
 		}
 	} else {
 		//if ((PORTC = (PORTC | 0x0F) & ~(1<<j)) & (PINB & (0x04<<l))) pressed = 0;
-		PORTC = PORTC & 0xF0;
+		PORTC = PORTC & 0xC3;
 		_delay_us( 10 );	
 		ch = PINB & 0x3C;
 		if ( ch == 0x3C ) pressed = 0;

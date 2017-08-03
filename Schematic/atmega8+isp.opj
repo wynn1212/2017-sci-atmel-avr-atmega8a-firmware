@@ -7,7 +7,19 @@
       (Type "Schematic Design"))
     (BuildFileAddedOrDeleted "x")
     (CompileFileAddedOrDeleted "x")
-    (NoModify))
+    (NoModify)
+    (FLDSTUFF_Scope "0")
+    (FLDSTUFF_Action "0")
+    (FLDSTUFF_Report_File
+       "c:\users\wynn1212\documents\2017-sci-atmel-avr-atmega8a-firmware\schematic\atmega8+isp.RPT")
+    (FLDSTUFF_Update_File
+       "c:\users\wynn1212\documents\2017-sci-atmel-avr-atmega8a-firmware\schematic\atmega8+isp.UPD")
+    (FLDSTUFF__Uppercase_Result_Property "FALSE")
+    (FLDSTUFF_Uppercase_Update_Property "FALSE")
+    (FLDSTUFF_Uppercase_Unconditionally "FALSE")
+    (FLDSTUFF_Visibility "0")
+    (FLDSTUFF_inst_or_occurrence "0")
+    (FLDSTUFF_Create_Report_File "FALSE"))
   (Folder "Outputs")
   (Folder "Referenced Projects")
   (GlobalState
@@ -17,12 +29,12 @@
     (Doc
       (Type "COrCapturePMDoc")
       (Frame
-        (Placement "44 0 1 -1 -1 -8 -31 0 200 0 295"))
+        (Placement "44 0 1 -1 -1 -8 -31 0 288 0 295"))
       (Tab 0))
     (Doc
       (Type "COrSchematicDoc")
       (Frame
-        (Placement "44 0 1 160 916 -8 -31 78 1682 78 706")
+        (Placement "44 0 1 0 916 -8 -31 78 1464 78 706")
         (Scroll "0 0")
         (Zoom "124")
         (Occurrence "/"))
@@ -33,15 +45,18 @@
     (Doc
       (Type "COrSchematicDoc")
       (Frame
-        (Placement "44 2 3 0 916 -8 -31 130 1734 130 889")
-        (Scroll "0 240")
-        (Zoom "200")
+        (Placement "44 2 3 -1 -1 -8 -31 287 1673 96 724")
+        (Scroll "0 513")
+        (Zoom "190")
         (Occurrence "/"))
       (Path
          "C:\USERS\WYNN1212\DOCUMENTS\2017-SCI-ATMEL-AVR-ATMEGA8A-FIRMWARE\SCHEMATIC\ATMEGA8+ISP.DSN")
       (Schematic "SCHEMATIC1")
       (Page "Main Board")))
   (PartMRUSelector
+    (VCC
+      (LibraryName "C:\CADENCE\ORCAD_9.2.3\TOOLS\CAPTURE\LIBRARY\CAPSYM.OLB")
+      (DeviceIndex "0"))
     (RESISTOR
       (FullPartName "RESISTOR.Normal")
       (LibraryName "C:\CADENCE\ORCAD_9.2.3\TOOLS\CAPTURE\LIBRARY\DISCRETE.OLB")
@@ -49,18 +64,51 @@
     (GND
       (LibraryName "C:\CADENCE\ORCAD_9.2.3\TOOLS\CAPTURE\LIBRARY\CAPSYM.OLB")
       (DeviceIndex "0"))
-    (VCC
-      (LibraryName "C:\CADENCE\ORCAD_9.2.3\TOOLS\CAPTURE\LIBRARY\CAPSYM.OLB")
+    ("PNP BCE"
+      (FullPartName "PNP BCE.Normal")
+      (LibraryName
+         "C:\CADENCE\ORCAD_9.2.3\TOOLS\CAPTURE\LIBRARY\TRANSISTOR.OLB")
       (DeviceIndex "0"))
-    (LM358
-      (FullPartName "LM358.Normal")
-      (LibraryName "C:\CADENCE\ORCAD_9.2.3\TOOLS\CAPTURE\LIBRARY\OPAMP.OLB")
+    (SPEAKER
+      (FullPartName "SPEAKER.Normal")
+      (LibraryName "C:\CADENCE\ORCAD_9.2.3\TOOLS\CAPTURE\LIBRARY\DISCRETE.OLB")
+      (DeviceIndex "0"))
+    ("SW PUSHBUTTON"
+      (FullPartName "SW PUSHBUTTON.Normal")
+      (LibraryName "C:\CADENCE\ORCAD_9.2.3\TOOLS\CAPTURE\LIBRARY\DISCRETE.OLB")
+      (DeviceIndex "0"))
+    ("SW PUSHBUTTON-SPST/SM"
+      (FullPartName "SW PUSHBUTTON-SPST/SM.Normal")
+      (LibraryName "C:\CADENCE\ORCAD_9.2.3\TOOLS\CAPTURE\LIBRARY\DISCRETE.OLB")
+      (DeviceIndex "0"))
+    ("DIODE ZENER"
+      (FullPartName "DIODE ZENER.Normal")
+      (LibraryName "C:\CADENCE\ORCAD_9.2.3\TOOLS\CAPTURE\LIBRARY\DISCRETE.OLB")
+      (DeviceIndex "0"))
+    (CAP
+      (FullPartName "CAP.Normal")
+      (LibraryName "C:\CADENCE\ORCAD_9.2.3\TOOLS\CAPTURE\LIBRARY\DISCRETE.OLB")
       (DeviceIndex "0"))
     ("CAP NP"
       (FullPartName "CAP NP.Normal")
       (LibraryName "C:\CADENCE\ORCAD_9.2.3\TOOLS\CAPTURE\LIBRARY\DISCRETE.OLB")
       (DeviceIndex "0"))
+    ("RESISTOR VAR"
+      (FullPartName "RESISTOR VAR.Normal")
+      (LibraryName "C:\CADENCE\ORCAD_9.2.3\TOOLS\CAPTURE\LIBRARY\DISCRETE.OLB")
+      (DeviceIndex "0"))
+    ("LCD16x2 16PIN"
+      (FullPartName "LCD16x2 16PIN.Normal")
+      (LibraryName
+         "C:\USERS\WYNN1212\DOCUMENTS\2017-SCI-ATMEL-AVR-ATMEGA8A-FIRMWARE\SCHEMATIC\LIBRARIES\LIBRARY1.OLB")
+      (DeviceIndex "0"))
+    (LM358
+      (FullPartName "LM358.Normal")
+      (LibraryName "C:\CADENCE\ORCAD_9.2.3\TOOLS\CAPTURE\LIBRARY\OPAMP.OLB")
+      (DeviceIndex "0"))
     (CON2
       (FullPartName "CON2.Normal")
       (LibraryName "C:\CADENCE\ORCAD_9.2.3\TOOLS\CAPTURE\LIBRARY\CONNECTOR.OLB")
-      (DeviceIndex "0"))))
+      (DeviceIndex "0")))
+  (LastUsedLibraryBrowseDirectory
+     "C:\Users\wynn1212\Documents\2017-sci-atmel-avr-atmega8a-firmware\Schematic\Libraries"))

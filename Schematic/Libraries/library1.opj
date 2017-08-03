@@ -13,11 +13,10 @@
   (GlobalState
     (FileView
       (Path "Design Resources")
-      (Path "Design Resources" ".\library1.olb")
-      (Select "Design Resources" ".\library1.olb"))
+      (Path "Design Resources" ".\library1.olb"))
     (HierarchyView)
     (Doc
       (Type "COrCapturePMDoc")
       (Frame
-        (Placement "44 0 1 -1 -1 -1 -1 0 238 0 295"))
+        (Placement "44 0 1 160 912 -8 -31 196 434 -2 293"))
       (Tab 0))))

@@ -1,6 +1,9 @@
 //This function is used to initialize the USART
 //at a given UBRR value
 
+#define Baudrate 25		//26uS = 38400
+#define BIT3 0x08
+
 char USARTReadChar( void );
 void USARTInit(uint16_t ubrr_value){
 
@@ -79,6 +82,27 @@ void printint(long ptr){
 	}
 }*/
 
+void putcharJ( unsigned char indata ) {
+	cli();
+	unsigned char ch, i;
+	
+	_delay_us( Baudrate );
+	PORTD &= ~BIT3;	//Start bit = 0
+	_delay_us( Baudrate );
+	for ( i=0; i<8; i++ ) {
+		ch = indata & 0x01;
+		if ( ch ) {	//if ( LSB=1 )
+			PORTD |= BIT3;
+		} else {
+			PORTD &= ~BIT3;
+		}
+		_delay_us( Baudrate );
+		indata >>= 1;
+	}
+	PORTD |= BIT3;	//Stop bit
+	sei();
+} 
+
 void printi(char *str, unsigned int iVal){
 	uchar i=0;
 	unsigned char j,k;
@@ -86,18 +110,18 @@ void printi(char *str, unsigned int iVal){
 	while ( str[i] && i<100 ){
 		if ( str[i] == '%'){
 			++i;	//get the next char
-			if ( str[i] == 'c' ) putchar(iVal);
+			if ( str[i] == 'c' ) putcharJ(iVal);
 			if ( str[i] == 'X' ){
 				j = iVal / 16 ;
 				k = iVal % 16 ;
-				putchar(HexData[j]);
-				putchar(HexData[k]);
+				putcharJ(HexData[j]);
+				putcharJ(HexData[k]);
 			}
 			if ( str[i] == 'x' ){
 				j = iVal / 16 ;
 				k = iVal % 16 ;
-				putchar(HexDataLow[j]);
-				putchar(HexDataLow[k]);
+				putcharJ(HexDataLow[j]);
+				putcharJ(HexDataLow[k]);
 			}
 			if ( str[i] == 'd' ){
 				for (a=1;a<6;a++){
@@ -106,11 +130,11 @@ void printi(char *str, unsigned int iVal){
 				}
 				for (c=5;c>0;c--){
 					if ( b[c]!= '0' ) b0 = 1;
-					if ( b0 ) putchar( b[c] );
+					if ( b0 ) putcharJ( b[c] );
 				}
 			}
 		} else {
-			putchar(str[i]);
+			putcharJ(str[i]);
 		}
 		++i;
 	}

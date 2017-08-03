@@ -8,6 +8,7 @@
 #include "usbdrv/usbdrv.c"
 #include "usbdrv/oddebug.c"        /* This is also an example for using debug macros */
 #include <avr/eeprom.h>			/*EEPROM support.*/
+
 #define LED_NUM  1
 #define XOR_RUNLED PORTD ^= 0x01
 #define  byte unsigned char

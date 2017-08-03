@@ -3,30 +3,48 @@
 #include <util/delay.h> 					/* for _delay_ms() */
 
 /*   =======  硬體接腳的定義  =============  */
-#define DBPORT PORTC						//PC0~PC3  
-#define CTPORT PORTC 
-#define E_INDEX  0x01						//bit0
-#define RS_INDEX 0x0f						//bit4
-#define RW_INDEX 0x00						//no-bit
-#define dT 20
+//#define DBPORT PORTC						//PC0~PC3  
+//#define CTPORT PORTC 
+//#define E_INDEX  0x01						//bit0
+//#define RS_INDEX 0x0f						//bit4
+//#define RW_INDEX 0x00						//no-bit
+#define dT 30
+void LCD_E( char b ) {						//LCD Enabler
+	if ( b ) PORTD |= 0x20;					//PD5 = 1
+	if ( !b ) PORTD &= ~0x20;				//PD5 = 0
+}
 
+void LCD_RS( char b ) {
+	if ( b ) PORTD |= 0x02;					//PB 0x01
+	if ( !b ) PORTD &= ~0x02;				//
+}
+
+void LCD_RW( char b ) {
+	if ( b ) PORTD |= 0x08;
+	if ( !b ) PORTD &= ~0x08;
+}
+
+static void LCD_DataBus(uchar b){ //4-bit mode, only use 4pin.
+	PORTB = (PORTB & ~0x3f) | (b & 0x3f);
+	PORTD = (PORTD & ~0xc0) | (b & 0xc0);
+}
 void LCD_CMD(char cmd);
-const char BITLEN = 4;						//4-bit mode 
+//const char BITLEN = 8;						//4-bit mode 
 //const char HexData[16] = "0123456789ABCDEF";
-const uchar picture1[6][8] ={	{0x1F,0x10,0x17,0x17,0x17,0x17,0x17,0x17},
-								{0x1F,0x00,0x1F,0x1F,0x1F,0x1F,0x1F,0x1F}, 
-								{0x1F,0x01,0x1D,0x1D,0x1D,0x1D,0x1D,0x1D},                              	                            
-								{0x17,0x17,0x17,0x17,0x17,0x17,0x10,0x1F}, 
-								{0x1F,0x1F,0x1F,0x1F,0x1F,0x1F,0x00,0x1F},                                                           
-								{0x1D,0x1D,0x1D,0x1D,0x1D,0x1D,0x01,0x1F}, 
+const uchar picture1[6][8] ={	{0x1F,0x10,0x10,0x10,0x10,0x10,0x10,0x10},				// 5 x 8 Dot Matrix for each character
+								{0x1F,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
+								{0x1F,0x01,0x01,0x01,0x01,0x01,0x01,0x01},
+								{0x10,0x10,0x10,0x1F,0x00,0x00,0x03,0x1F},
+								{0x00,0x00,0x00,0x1F,0x0E,0x0E,0x1F,0x1F},
+								{0x01,0x01,0x01,0x1F,0x00,0x00,0x18,0x1F}, 
                                 } ;
 
-const uchar picture2[6][8] ={	{0x1F,0x10,0x10,0x10,0x10,0x10,0x10,0x10},                                                            
-								{0x1F,0x00,0x00,0x00,0x00,0x00,0x00,0x00},                              
-								{0x1F,0x01,0x01,0x01,0x01,0x01,0x01,0x01},                                                                                                                                                      
-								{0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x1F},
-								{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x1F},                                                                                                                        
-								{0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x1F},                                                                                                                                                                                    
+const uchar picture2[6][8] ={	{0x1F,0x10,0x17,0x17,0x17,0x17,0x17,0x17},				// 5 x 8 Dot Matrix for each character
+								{0x1F,0x00,0x1F,0x1F,0x1F,0x1F,0x1F,0x1F},
+								{0x1F,0x01,0x1D,0x1D,0x1D,0x1D,0x1D,0x1D},
+								{0x17,0x17,0x10,0x1F,0x00,0x00,0x03,0x1F},
+								{0x1F,0x1F,0x00,0x1F,0x0E,0x0E,0x1F,0x1F},
+								{0x1D,0x1D,0x01,0x1F,0x00,0x00,0x18,0x1F},                                                                                                                                                                                    
 								} ;
 
 
@@ -34,68 +52,74 @@ const uchar picture2[6][8] ={	{0x1F,0x10,0x10,0x10,0x10,0x10,0x10,0x10},
 /*   ==========================     */    
 void Init_LCD( void ){						// LCD 初始化函式
 	_delay_ms(30);							// 等待 LCD 電源開啟完成
-	if ( BITLEN==4 ) LCD_CMD(0x28);		//4BIT 
-	if ( BITLEN==8 ) LCD_CMD(0x38);		//8BIT 
-	LCD_CMD(0x33);
-	_delay_ms(10);
-	LCD_CMD(0x32);
-	_delay_ms(10);
-	_delay_ms(1);							//	LCD_CMD(0x0E);
-	LCD_CMD(0x0C);
-	_delay_ms(1);
+	/*if ( BITLEN==4 ) LCD_CMD(0x28);		//4BIT 
+	if ( BITLEN==8 ) */
+	LCD_CMD(0x38);		//8BIT 
+	_delay_ms(dT);
+	LCD_CMD(0x38);		//8BIT 
+	_delay_ms(dT);
+	LCD_CMD(0x08);
+	_delay_ms(dT);
 	LCD_CMD(0x01);
-	_delay_ms(1);
+	_delay_ms(dT);
 	LCD_CMD(0x06);
-	_delay_ms(10);
-	LCD_CMD(0x80);							// 設定DD RAM位址第一行第一列	
-	_delay_ms(10);
+	_delay_ms(dT);
+	LCD_CMD(0x0C);
+	_delay_ms(dT);
+	LCD_CMD(0x80);
+	_delay_ms(dT);
 } 
 
 uchar LCD_BUSY(void){						/* 0 for Ready */
 	_delay_us(dT);                    		// 一個短時間的延遲時序   
 	return 0;  
 }
+
 void LCD_CMD(char cmd){						// 寫入指令暫存器函式
     while (LCD_BUSY());
-	CTPORT = CTPORT & ~RS_INDEX;			//RS = 0
+	LCD_RS(0);								//RS = 0
 	_delay_us(dT);							// 一個短時間的延遲時序		
-	CTPORT = CTPORT & ~RW_INDEX;			//RW = 0	
+	LCD_RW(0);								//RW = 0	
 	_delay_us(dT);							// 一個短時間的延遲時序	
-
-	DBPORT = (cmd>>4) & 0x0F;				//寫入指令暫存器 bit5-0
+/*
+	LCD_DataBus(cmd>>4);
+	//DBPORT = (cmd>>4) & 0x0F;				//寫入指令暫存器 bit5-0
 	_delay_us( dT );						// 一個短時間的延遲時序	
-	CTPORT = CTPORT |  E_INDEX;				//E  = 1		
+	LCD_E(1);								//E  = 1		
 	_delay_us( dT );						// 一個短時間的延遲時序	
-	CTPORT = CTPORT & ~E_INDEX;				//E  = 0	
+	LCD_E(0);								//E  = 0	
 	_delay_us( dT );						// 一個短時間的延遲時序		
-	
-	DBPORT = cmd & 0x0F;					//寫入指令暫存器 bit5-0
+	*/
+	LCD_DataBus(cmd);
+	//DBPORT = cmd & 0x0F;					//寫入指令暫存器 bit5-0
 	_delay_us( dT );						// 一個短時間的延遲時序	
-	CTPORT = CTPORT |  E_INDEX;				//E  = 1		
+	LCD_E(1);								//E  = 1		
 	_delay_us( dT );						// 一個短時間的延遲時序	
-	CTPORT = CTPORT & ~E_INDEX;				//E  = 0	
+	LCD_E(0);								//E  = 0	
 	_delay_us( dT );						// 一個短時間的延遲時序			
 }
 
 void LCD_DATA(char data1) {					// 寫入資料暫存器函式
     while (LCD_BUSY());
-	CTPORT = CTPORT |  RS_INDEX;			//RS = 1
+	LCD_RS(1);								//RS = 1
 	_delay_us( dT );						// 一個短時間的延遲時序		
-	CTPORT = CTPORT & ~RW_INDEX;			//RW = 0	
+	LCD_RW(0);								//RW = 0	
 	_delay_us( dT );						// 一個短時間的延遲時序
 	
-	DBPORT = (data1>>4) & 0x3F;			//寫入資料 bit5-0
+	/*LCD_DataBus(data1>>4);
+	//DBPORT = (data1>>4) & 0x3F;				//寫入資料 bit5-0
    _delay_us( dT );							// 一個短時間的延遲時序	     	
-	CTPORT = CTPORT |  E_INDEX;				//E  = 1		
+	LCD_E(1);								//E  = 1
 	_delay_us( dT );						// 一個短時間的延遲時序	
-	CTPORT = CTPORT & ~E_INDEX;				//E  = 0	
+	LCD_E(0);								//E  = 0
    _delay_us( dT );							// 一個短時間的延遲時序	
-
-	DBPORT = data1 & 0x0F;					//寫入資料 bit5-0
+*/
+	LCD_DataBus(data1);
+	//DBPORT = data1 & 0x0F;					//寫入資料 bit5-0
    _delay_us( dT );							// 一個短時間的延遲時序	     	
-	CTPORT = CTPORT |  E_INDEX;				//E  = 1		
+	LCD_E(1);								//E  = 1
 	_delay_us( dT );						// 一個短時間的延遲時序	
-	CTPORT = CTPORT & ~E_INDEX;				//E  = 0	
+	LCD_E(0);								//E  = 0	
    _delay_us( dT );							// 一個短時間的延遲時序		
 }
 

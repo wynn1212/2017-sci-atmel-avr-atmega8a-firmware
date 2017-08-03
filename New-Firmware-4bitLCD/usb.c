@@ -1,3 +1,4 @@
+
 /* The following variables store the status of the current data transfer */
 static uchar    currentAddress;
 static uchar    bytesRemaining;
