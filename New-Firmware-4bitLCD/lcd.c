@@ -15,8 +15,8 @@ void LCD_E( char b ) {						//LCD Enabler
 }
 
 void LCD_RS( char b ) {
-	if ( b ) PORTD |= 0x02;					//PB 0x01
-	if ( !b ) PORTD &= ~0x02;				//
+	if ( b ) PORTB |= 0x01;					//PB 0x01
+	if ( !b ) PORTB &= ~0x01;				//
 }
 
 void LCD_RW( char b ) {
@@ -29,7 +29,7 @@ static void LCD_DataBus(uchar b){ //4-bit mode, only use 4pin.
 	PORTD = (PORTD & ~0xc0) | (b & 0xc0);
 }
 void LCD_CMD(char cmd);
-//const char BITLEN = 8;						//4-bit mode 
+const char BITLEN = 4;						//4-bit mode 
 //const char HexData[16] = "0123456789ABCDEF";
 const uchar picture1[6][8] ={	{0x1F,0x10,0x10,0x10,0x10,0x10,0x10,0x10},				// 5 x 8 Dot Matrix for each character
 								{0x1F,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
@@ -52,9 +52,8 @@ const uchar picture2[6][8] ={	{0x1F,0x10,0x17,0x17,0x17,0x17,0x17,0x17},				// 5
 /*   ==========================     */    
 void Init_LCD( void ){						// LCD 初始化函式
 	_delay_ms(30);							// 等待 LCD 電源開啟完成
-	/*if ( BITLEN==4 ) LCD_CMD(0x28);		//4BIT 
-	if ( BITLEN==8 ) */
-	LCD_CMD(0x38);		//8BIT 
+	if ( BITLEN==4 ) LCD_CMD(0x28);		//4BIT 
+	if ( BITLEN==8 ) LCD_CMD(0x38);		//8BIT 
 	_delay_ms(dT);
 	LCD_CMD(0x38);		//8BIT 
 	_delay_ms(dT);

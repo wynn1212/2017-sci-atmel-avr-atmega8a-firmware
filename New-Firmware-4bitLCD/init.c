@@ -57,7 +57,7 @@ void System_init(void){
 						//   out    out    out    D-     out    D+     out    out
 						// ---------------------------------------------------------
 						//  PORTD7 PORTD6 PORTD5 PORTD4 PORTD3 PORTD2 PORTD1 PORTD0
-		PORTD = 0x0;    //    0      0      0      0      0      0      0      0  
+		PORTD = 0x08;    //    0      0      0      0      1      0      0      0  
 						// ---------------------------------------------------------
 		UCSRA = 0x22;   // For more information, Please refer ATmega8A datasheet
 		//TCCR1B = 0x06;

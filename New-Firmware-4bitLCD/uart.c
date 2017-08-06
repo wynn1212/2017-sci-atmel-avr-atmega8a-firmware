@@ -83,10 +83,10 @@ void printint(long ptr){
 }*/
 
 void putcharJ( unsigned char indata ) {
-	cli();
 	unsigned char ch, i;
 	
 	_delay_us( Baudrate );
+	cli();
 	PORTD &= ~BIT3;	//Start bit = 0
 	_delay_us( Baudrate );
 	for ( i=0; i<8; i++ ) {

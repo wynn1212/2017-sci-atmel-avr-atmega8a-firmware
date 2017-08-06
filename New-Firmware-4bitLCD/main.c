@@ -41,9 +41,8 @@ ISR (TIMER1_OVF_vect){						// timer0 overflow interrupt
 int main(void){	
 	uchar temp1;
 	System_init();
-	printi("8\n\r",0);
-	printi("\n\rI:Atmega8A OK.\n\r",0);
-	printi("I:Atmega8A UART dbgtty at 115200bps .\n\r",0);
+	printi("8\n\rI:Atmega8A OK.\n\r",0);
+	printi("I:Atmega8A UART dbgtty at 38400bps .\n\r",0);
 	show_logo1();
 	show_logo2();
 	//GICR = 1<<INT1;					// Enable INT1
@@ -116,6 +115,7 @@ int main(void){
 		}   	  
 		if(timer[1] ==0){					//5ms x 200 = 1s ¤W¼Æ
 			timer[1] = 200; 			 
+			printi("8\n\rHello World!\n\r",0);
 			if(disp_mode == 0 && !bKeybusy ){
 				DISP_Str(0x80,"105   ");                                       
 				DISP_Str(0xC0,"NHSSC ");
