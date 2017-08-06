@@ -15,8 +15,8 @@ void LCD_E( char b ) {						//LCD Enabler
 }
 
 void LCD_RS( char b ) {
-	if ( b ) PORTB |= 0x01;					//PB 0x01
-	if ( !b ) PORTB &= ~0x01;				//
+	if ( b ) PORTD |= 0x02;					//PD1
+	if ( !b ) PORTD &= ~0x02;				//
 }
 
 void LCD_RW( char b ) {
