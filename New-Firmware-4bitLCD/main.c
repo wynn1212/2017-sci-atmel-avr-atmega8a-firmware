@@ -36,10 +36,9 @@ ISR (TIMER1_OVF_vect){						// timer0 overflow interrupt
 	PORTB ^= 0x02;					//PB1 接 BEEP   腳位更改點  
 	//PORTC ^= 0x02;
 }
-
  
 int main(void){	
-	uchar temp1;
+//	uchar temp1;
 	System_init();
 	printi("8\n\rI:Atmega8A OK.\n\r",0);
 	printi("I:Atmega8A UART dbgtty at 38400bps .\n\r",0);
@@ -115,7 +114,8 @@ int main(void){
 		}   	  
 		if(timer[1] ==0){					//5ms x 200 = 1s 上數
 			timer[1] = 200; 			 
-			printi("8\n\rHello World!\n\r",0);
+			int temp1=0;
+			printi("8\n\rHello World!%d\n\r",temp1++);
 			if(disp_mode == 0 && !bKeybusy ){
 				DISP_Str(0x80,"105   ");                                       
 				DISP_Str(0xC0,"NHSSC ");

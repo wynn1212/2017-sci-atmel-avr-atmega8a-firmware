@@ -29,7 +29,7 @@ static void LCD_DataBus(uchar b){ //4-bit mode, only use 4pin.
 	PORTD = (PORTD & ~0xc0) | (b & 0xc0);
 }
 void LCD_CMD(char cmd);
-const char BITLEN = 4;						//4-bit mode 
+const char BITLEN = 8;						//4-bit mode 
 //const char HexData[16] = "0123456789ABCDEF";
 const uchar picture1[6][8] ={	{0x1F,0x10,0x10,0x10,0x10,0x10,0x10,0x10},				// 5 x 8 Dot Matrix for each character
 								{0x1F,0x00,0x00,0x00,0x00,0x00,0x00,0x00},

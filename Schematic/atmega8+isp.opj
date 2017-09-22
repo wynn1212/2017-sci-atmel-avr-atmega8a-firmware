@@ -34,7 +34,7 @@
     (Doc
       (Type "COrSchematicDoc")
       (Frame
-        (Placement "44 0 1 0 916 -8 -31 78 1464 78 706")
+        (Placement "44 2 3 0 604 -8 -31 78 1464 78 706")
         (Scroll "0 0")
         (Zoom "124")
         (Occurrence "/"))
@@ -45,9 +45,9 @@
     (Doc
       (Type "COrSchematicDoc")
       (Frame
-        (Placement "44 2 3 -1 -1 -8 -31 287 1673 96 724")
-        (Scroll "188 57")
-        (Zoom "190")
+        (Placement "44 0 1 0 916 -8 -31 345 1731 192 820")
+        (Scroll "0 0")
+        (Zoom "95")
         (Occurrence "/"))
       (Path
          "C:\USERS\WYNN1212\DOCUMENTS\2017-SCI-ATMEL-AVR-ATMEGA8A-FIRMWARE\SCHEMATIC\ATMEGA8+ISP.DSN")
