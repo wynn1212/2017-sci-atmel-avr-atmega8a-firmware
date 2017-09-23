@@ -3,16 +3,16 @@
 #include <util/delay.h> 					/* for _delay_ms() */
 
 /*   =======  硬體接腳的定義  =============  */
-#define DBPORT PORTC						//PC0~PC3  
-#define CTPORT PORTC 
-#define E_INDEX  0x01						//bit0
-#define RS_INDEX 0x0f						//bit4
-#define RW_INDEX 0x00						//no-bit
-#define dT 20
+#define RS 0  
+#define E 3
+#define dT 30
 
-void LCD_CMD(char cmd);
-const char BITLEN = 4;						//4-bit mode 
-//const char HexData[16] = "0123456789ABCDEF";
+void LCD_E( char b );
+void LCD_RW( char b );
+void LCD_RS( char b );
+void LCD_CMD(char ch);
+void LCD_COM(char cmd );
+//const char BITLEN = 8;						//4-bit mode 
 const uchar picture1[6][8] ={	{0x1F,0x10,0x17,0x17,0x17,0x17,0x17,0x17},
 								{0x1F,0x00,0x1F,0x1F,0x1F,0x1F,0x1F,0x1F}, 
 								{0x1F,0x01,0x1D,0x1D,0x1D,0x1D,0x1D,0x1D},                              	                            
@@ -29,76 +29,53 @@ const uchar picture2[6][8] ={	{0x1F,0x10,0x10,0x10,0x10,0x10,0x10,0x10},
 								{0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x1F},                                                                                                                                                                                    
 								} ;
 
-
- 
-/*   ==========================     */    
 void Init_LCD( void ){						// LCD 初始化函式
-	_delay_ms(30);							// 等待 LCD 電源開啟完成
-	if ( BITLEN==4 ) LCD_CMD(0x28);		//4BIT 
-	if ( BITLEN==8 ) LCD_CMD(0x38);		//8BIT 
-	LCD_CMD(0x33);
-	_delay_ms(10);
-	LCD_CMD(0x32);
-	_delay_ms(10);
-	_delay_ms(1);							//	LCD_CMD(0x0E);
-	LCD_CMD(0x0C);
-	_delay_ms(1);
+	char ch = 0x38;		//8BIT
+	cli();
+	//if ( BITLEN==4 ) ch = 0x28;
+	_delay_ms(dT);						// 等待 LCD 電源開啟完成
+	LCD_CMD(ch);		//
+	_delay_ms(dT);
+	LCD_CMD(ch);		// 
+	_delay_ms(dT);
+	LCD_CMD(ch);		// 
+	_delay_ms(dT);
+	LCD_CMD(0x08);
+	_delay_ms(dT);
 	LCD_CMD(0x01);
-	_delay_ms(1);
+	_delay_ms(dT);
 	LCD_CMD(0x06);
-	_delay_ms(10);
-	LCD_CMD(0x80);							// 設定DD RAM位址第一行第一列	
-	_delay_ms(10);
+	_delay_ms(dT);
+	LCD_CMD(0x0C);
+	_delay_ms(dT);
+	LCD_CMD(0x80);
+	_delay_ms(dT);
+	sei();
+	//init_LCD_CGRAM();
 } 
 
 uchar LCD_BUSY(void){						/* 0 for Ready */
 	_delay_us(dT);                    		// 一個短時間的延遲時序   
 	return 0;  
 }
-void LCD_CMD(char cmd){						// 寫入指令暫存器函式
-    while (LCD_BUSY());
-	CTPORT = CTPORT & ~RS_INDEX;			//RS = 0
-	_delay_us(dT);							// 一個短時間的延遲時序		
-	CTPORT = CTPORT & ~RW_INDEX;			//RW = 0	
-	_delay_us(dT);							// 一個短時間的延遲時序	
-
-	DBPORT = (cmd>>4) & 0x0F;				//寫入指令暫存器 bit5-0
-	_delay_us( dT );						// 一個短時間的延遲時序	
-	CTPORT = CTPORT |  E_INDEX;				//E  = 1		
-	_delay_us( dT );						// 一個短時間的延遲時序	
-	CTPORT = CTPORT & ~E_INDEX;				//E  = 0	
-	_delay_us( dT );						// 一個短時間的延遲時序		
-	
-	DBPORT = cmd & 0x0F;					//寫入指令暫存器 bit5-0
-	_delay_us( dT );						// 一個短時間的延遲時序	
-	CTPORT = CTPORT |  E_INDEX;				//E  = 1		
-	_delay_us( dT );						// 一個短時間的延遲時序	
-	CTPORT = CTPORT & ~E_INDEX;				//E  = 0	
-	_delay_us( dT );						// 一個短時間的延遲時序			
+void LCD_CMD(char ch){						// 寫入指令暫存器函式
+	LCD_RS(0);								//RS = 	0
+	LCD_COM( ch );
 }
 
-void LCD_DATA(char data1) {					// 寫入資料暫存器函式
-    while (LCD_BUSY());
-	CTPORT = CTPORT |  RS_INDEX;			//RS = 1
-	_delay_us( dT );						// 一個短時間的延遲時序		
-	CTPORT = CTPORT & ~RW_INDEX;			//RW = 0	
-	_delay_us( dT );						// 一個短時間的延遲時序
-	
-	DBPORT = (data1>>4) & 0x3F;			//寫入資料 bit5-0
-   _delay_us( dT );							// 一個短時間的延遲時序	     	
-	CTPORT = CTPORT |  E_INDEX;				//E  = 1		
-	_delay_us( dT );						// 一個短時間的延遲時序	
-	CTPORT = CTPORT & ~E_INDEX;				//E  = 0	
-   _delay_us( dT );							// 一個短時間的延遲時序	
-
-	DBPORT = data1 & 0x0F;					//寫入資料 bit5-0
-   _delay_us( dT );							// 一個短時間的延遲時序	     	
-	CTPORT = CTPORT |  E_INDEX;				//E  = 1		
-	_delay_us( dT );						// 一個短時間的延遲時序	
-	CTPORT = CTPORT & ~E_INDEX;				//E  = 0	
-   _delay_us( dT );							// 一個短時間的延遲時序		
+void LCD_DATA(char ch) {					// 寫入資料暫存器函式
+	LCD_RS(1);								//RS = 1
+	LCD_COM( ch );
 }
-
+void LCD_COM(char cmd ) {	
+	//LCD_RW(0);								//RW = 0
+    while (LCD_BUSY()); 
+	digitalWrite8(cmd);	
+	_delay_us( dT );						// 一個短時間的延遲時序	
+	LCD_E(1);								//E  = 1		
+	_delay_us( dT );						// 一個短時間的延遲時序	
+	LCD_E(0);								//E  = 0	
+}
 void DISP_Str(char addr1,char *str) {		// 在LCD指定位置顯示字串函式
 	LCD_CMD(addr1);							// 設定DD RAM位址第一行第一列
 	while(*str !=0) LCD_DATA(*str++);		// 呼叫顯示字串函式
@@ -134,13 +111,13 @@ void DISP_Int(char addr1,long v1) {			// 在LCD指定位置顯示字元函式
 }
 
 void DISP_Hex(char addr1,unsigned char v1) {// 在LCD指定位置顯示字元函式
-   unsigned char i,j;
-   i = v1 / 16 ;
-   j = v1 % 16 ;
-   DISP_Chr(addr1,'0');
-   DISP_Chr(addr1 + 1,'x');   
-   DISP_Chr(addr1 + 2 ,HexData[i]);
-   DISP_Chr(addr1 + 3 ,HexData[j]);
+	unsigned char i,j;
+	i = v1 / 16 ;
+	j = v1 % 16 ;
+	DISP_Chr(addr1,'0');
+	DISP_Chr(addr1 + 1,'x');   
+	DISP_Chr(addr1 + 2 ,HexData[i]);
+	DISP_Chr(addr1 + 3 ,HexData[j]);
 }
 
 void lcd_set_char1(void) {					// address = 0 -7
@@ -205,6 +182,35 @@ void process_show_station(void) {			//顯示站別
 }
 
 void lcdclear(void) {
-  DISP_Str(0x80,"                ");   
-  DISP_Str(0xC0,"                "); 
+	DISP_Str(0x80,"                ");   
+	DISP_Str(0xC0,"                "); 
+}
+
+void lcdclear2(void) {   
+	DISP_Str(0xC0,"                "); 
+}
+
+void lcdclear1(void) {
+	DISP_Str(0x80,"                ");
+}
+	
+void LCD_E( char b ) {      	//LCD Enabler 
+	if ( b ) digitalWrite(E,1);//PORTD |= 0x08;     	//PD3 = 1 
+	if ( !b ) digitalWrite(E,0);//PORTD &= ~0x08;    	//PD3 = 0 
+	_delay_us(3);
+	//if ( b ) PORTD |= 0x20;     	//PD5 = 1 
+	//if ( !b ) PORTD &= ~0x20;    	//PD5 = 0 
+} 
+
+void LCD_RS( char b ) { 
+ if ( b ) digitalWrite(RS,1);//PORTD |= 0x01;     	//PD0
+ if ( !b ) digitalWrite(RS,0);//PORTD &= ~0x01;    	// 
+ //if ( b ) PORTD |= 0x02;     	//
+ //if ( !b ) PORTD &= ~0x02;    // 
+} 
+
+void LCD_RW( char b ) { 
+	b=0;
+	//if ( b ) PORTD |= 0x08; 
+	//if ( !b ) PORTD &= ~0x08; 
 }
