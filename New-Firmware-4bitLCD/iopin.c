@@ -50,7 +50,7 @@ void digitalWrite(unsigned char pin, unsigned char val ){
 	}
 }
 
-unsigned char bytepin[8] = {8,9,10,11,16,17,18,19};	//LCD
+unsigned char bytepin[8] = {3,1,0,21,20,19,18,17};	//LCD
 void digitalWrite8(unsigned char val) {
 	unsigned char i,ch;
 	for(i=0;i<8;i++){
@@ -62,7 +62,7 @@ void digitalWrite8(unsigned char val) {
 		}
 	}
 }
-unsigned char digitpin[4] = {21,20,13,12};	//Keypad
+unsigned char digitpin[4] = {16,13,12,11};	//Keypad
 void digitalWrite4( unsigned char val) {
 	unsigned char i,ch;
 	for(i=0;i<4;i++){
@@ -75,7 +75,7 @@ void digitalWrite4( unsigned char val) {
 	}
 }
 
-unsigned char readpin[3] = {7,6,5}; //Keypad Read
+unsigned char readpin[3] = {10,9,8}; //Keypad Read
 unsigned char digitalRead3(void){
 	unsigned char i,ch=0;
 	for(i=0;i<3;i++){

@@ -284,7 +284,7 @@ void unauthorizeuser(void){
 	DISP_Str(LINE1," !UNAUTH  USER! ");
 	DISP_Str(LINE2," !Locking    s! ");
 	for(i=60; i>0; i--){
-		sb(3000);
+		sb(4000);
 		DISP_Dec(LINE2+12,i);
 		if (i<10) DISP_Str(LINE2+11," ");
 		wdt_reset();

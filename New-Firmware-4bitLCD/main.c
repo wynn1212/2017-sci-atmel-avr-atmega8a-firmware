@@ -29,7 +29,7 @@ ISR(INT1_vect){   }
 //
 ISR (TIMER1_OVF_vect){						// timer0 overflow interrupt
 	TCNT1 = t1cnt;
-	digitalWrite(1,0xff);		//PD1 接 BEEP   腳位更改點 
+	digitalWrite(6,0xff);		//PD1 接 BEEP   腳位更改點 
 }
  
 int main(void){	
@@ -53,9 +53,9 @@ int main(void){
 			//++autocount;
 			check_unauth_flag();
 			if(disp_mode == 0 && !bKeybusy ){
-				DISP_Str(0x80,"105");                                       
-				DISP_Str(0xC0,"NHSSC");
-				DISP_Str(0x89,"ST:15");
+				DISP_Str(0x80,"106   ");                                       
+				DISP_Str(0xC0,"NHSSC ");
+				DISP_Str(0x89,"ST:34");
 				show_logo1();    	            	
 			}else if(disp_mode == 1  && !bKeybusy ){
 				DISP_Str(0x88,"WELCOME ");         	
@@ -85,7 +85,7 @@ int main(void){
 		}
 		if(timer[3] == 0) {
 			timer[3] = 30;	//150mS			
-			pinfunc_loop();
+			//pinfunc_loop();
 			ch = GetKeyPressed();  //********************************************************
 			digitalWrite(19,0xff);
 			
@@ -94,7 +94,7 @@ int main(void){
 			//PORTC |= 0x38;
 			//PORTD |= 0x10;
 			if ( ch ){
-				keyjob( ch );
+				//keyjob( ch );
 				sb(1000);
 			}
 		}

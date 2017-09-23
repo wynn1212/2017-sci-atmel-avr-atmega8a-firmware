@@ -4,13 +4,13 @@ void System_init(void){
 	/* Even if you don't use the watchdog, turn it off here. On newer devices,
 	 * the status of the watchdog (on/off, period) is PRESERVED OVER RESET!	 */	 
 	/* IO SETUP */   	//1=Output 0=Input
-	DDRB = 0x3F;    //
+	DDRB = 0x38;    //
 	PORTB = 0x00;   //
 	
 	DDRC = 0x7F;    // 0111-1111
 	PORTC = 0x7F;   //
 	
-	DDRD = 0x0B;    //0000-1011
+	DDRD = 0xEB;    //0000-1011
 	PORTD = 0xF3;   //		
 	
 	UCSRA = 0x22;   // For more information, Please refer ATmega8A datasheet
