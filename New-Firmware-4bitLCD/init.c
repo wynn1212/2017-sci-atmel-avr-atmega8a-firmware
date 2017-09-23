@@ -35,7 +35,7 @@ void System_init(void){
 	logo_flag  = 0;
 	scan_last = 0xff;
 	disp_mode = 0;
-	hh = 0; mm = 0; ss = 0, online = 0;
+	online = 0;
 	key = 0;
 	flag_close = 0;
 	

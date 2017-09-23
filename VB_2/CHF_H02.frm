@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin VB.Form frmMain 
    Caption         =   "105學年度  工業類科學生技藝競賽  電腦修護職種   第二站  崗位號碼:15          "
-   ClientHeight    =   5460
+   ClientHeight    =   4395
    ClientLeft      =   195
    ClientTop       =   420
    ClientWidth     =   9720
@@ -19,28 +19,10 @@ Begin VB.Form frmMain
    ForeColor       =   &H000000FF&
    KeyPreview      =   -1  'True
    LinkTopic       =   "Form1"
-   ScaleHeight     =   5460.387
+   ScaleHeight     =   4395.312
    ScaleMode       =   0  '使用者自訂
    ScaleWidth      =   9716.548
    StartUpPosition =   2  '螢幕中央
-   Begin VB.CommandButton Command3 
-      Caption         =   "AVR->PC"
-      Height          =   495
-      Index           =   1
-      Left            =   1920
-      TabIndex        =   12
-      Top             =   4680
-      Width           =   1455
-   End
-   Begin VB.CommandButton Command3 
-      Caption         =   "PC->AVR"
-      Height          =   495
-      Index           =   0
-      Left            =   360
-      TabIndex        =   11
-      Top             =   4680
-      Width           =   1455
-   End
    Begin VB.CommandButton Command2 
       BackColor       =   &H00FFFFFF&
       Caption         =   "K7"
@@ -53,7 +35,7 @@ Begin VB.Form frmMain
       Width           =   612
    End
    Begin VB.CommandButton Command2 
-      BackColor       =   &H00C0C000&
+      BackColor       =   &H00FFFFFF&
       Caption         =   "K6"
       Height          =   492
       Index           =   6
@@ -64,7 +46,7 @@ Begin VB.Form frmMain
       Width           =   612
    End
    Begin VB.CommandButton Command2 
-      BackColor       =   &H00FF00FF&
+      BackColor       =   &H00FFFFFF&
       Caption         =   "K5"
       Height          =   492
       Index           =   5
@@ -75,7 +57,7 @@ Begin VB.Form frmMain
       Width           =   612
    End
    Begin VB.CommandButton Command2 
-      BackColor       =   &H0000FFFF&
+      BackColor       =   &H00FFFFFF&
       Caption         =   "K4"
       Height          =   492
       Index           =   4
@@ -86,7 +68,7 @@ Begin VB.Form frmMain
       Width           =   612
    End
    Begin VB.CommandButton Command2 
-      BackColor       =   &H00FF0000&
+      BackColor       =   &H00FFFFFF&
       Caption         =   "K3"
       Height          =   492
       Index           =   3
@@ -97,7 +79,7 @@ Begin VB.Form frmMain
       Width           =   612
    End
    Begin VB.CommandButton Command2 
-      BackColor       =   &H0000FF00&
+      BackColor       =   &H00FFFFFF&
       Caption         =   "K2"
       Height          =   492
       Index           =   2
@@ -108,7 +90,7 @@ Begin VB.Form frmMain
       Width           =   612
    End
    Begin VB.CommandButton Command2 
-      BackColor       =   &H000000FF&
+      BackColor       =   &H00FFFFFF&
       Caption         =   "K1"
       Height          =   492
       Index           =   1
@@ -137,54 +119,11 @@ Begin VB.Form frmMain
       EndProperty
       Height          =   510
       Index           =   1
-      Left            =   6480
+      Left            =   7080
       Style           =   1  '圖片外觀
       TabIndex        =   0
-      Top             =   4680
+      Top             =   3480
       Width           =   2200
-   End
-   Begin VB.Label Label6 
-      BorderStyle     =   1  '單線固定
-      Caption         =   "Label6"
-      Height          =   375
-      Left            =   2280
-      TabIndex        =   15
-      Top             =   4200
-      Width           =   1935
-   End
-   Begin VB.Label Label5 
-      Caption         =   "時間同步選項"
-      Height          =   375
-      Left            =   360
-      TabIndex        =   14
-      Top             =   4200
-      Width           =   1815
-   End
-   Begin VB.Label Label3 
-      BorderStyle     =   1  '單線固定
-      Height          =   615
-      Left            =   7560
-      TabIndex        =   13
-      Top             =   3240
-      Width           =   1935
-   End
-   Begin VB.Label Label2 
-      BorderStyle     =   1  '單線固定
-      Caption         =   "ON LINE"
-      BeginProperty Font 
-         Name            =   "細明體"
-         Size            =   12
-         Charset         =   136
-         Weight          =   700
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      Height          =   615
-      Left            =   240
-      TabIndex        =   10
-      Top             =   3240
-      Width           =   7095
    End
    Begin VB.Label Label4 
       Caption         =   "RGB"
@@ -241,7 +180,7 @@ End Sub
 Private Sub Command2_Click(Index As Integer)
     VBKEY = Index
     c = 0
-    'If VBKEY = 1 Then
+    If VBKEY = 1 Then Call USBfunc("Clean", True)
     'If VBKEY = 1 Then fr = 262: ff.FillColor = vbRed
     'If VBKEY = 1 Then bRun = bRun Xor True
     'If VBKEY = 2 Then fr = 330: ff.FillColor = vbGreen
@@ -255,22 +194,6 @@ Private Sub Command2_Click(Index As Integer)
     Timer1.Enabled = False
 End Sub
 
-Private Sub Command3_Click(Index As Integer)
-    If (Index = 0) Then
-        hour = Val(Mid(Time$, 1, 2))
-        min = Val(Mid(Time$, 4, 2))
-        sec = Val(Mid(Time$, 7, 2))
-        Call USBfunc("clock", True)
-    ElseIf (Index = 1) Then
-        Dim rhour, rmin, rsec As Integer
-        Call USBfunc("clock", False)
-        Label6.Caption = ""
-        rhour = datain(6)
-        rmin = datain(7)
-        rsec = datain(8)
-        Label6.Caption = Format(rhour, "00") & ":" & Format(rmin, "00") & ":" & Format(rsec, "00")
-    End If
-End Sub
 
 Private Sub Form_Initialize()
     ready = True
@@ -299,9 +222,9 @@ Private Sub USBfunc(ByVal mode As String, ByVal IsWrite As Boolean)
             If IsWrite = True Then
                 '      (index)    0   1     2       3        4       5     6  7
                 'OutDataEightByte 0, &H4, VBKEY, fr / 10, fr Mod 10, bRun, 0, 0
-                If (mode = "clock") Then
+                If (mode = "Clean") Then
                     ready = 0
-                    OutDataEightByte 0, &H1, 0, 0, 0, hour, min, sec
+                    OutDataEightByte 0, &H1, 0, 0, 0, 0, 0, 0
                 ElseIf (mode = "key") Then
                     ready = 0
                     OutDataEightByte 0, &H1, 0, 0, 0, shour, smin, ssec 'Not Done
@@ -326,9 +249,9 @@ Private Sub USBfunc(ByVal mode As String, ByVal IsWrite As Boolean)
                 ElseIf (mode = "led") Then
                     
                 Else
-                    Label2.Caption = ""     'Clear Label2.Caption
+                    'Label2.Caption = ""     'Clear Label2.Caption
                     ReadData datain
-                    For i = 0 To 8: Label2.Caption = Label2.Caption & datain(i): Next i
+                    'For i = 0 To 8: Label2.Caption = Label2.Caption & datain(i): Next i
                     CloseUsbDevice
                     Label1.Caption = "ON LINE"
                     ff.FillStyle = 0
@@ -356,16 +279,11 @@ End Sub
 
 
 Private Sub Timer1_Timer()                             ''讀取KEY
-    DoEvents
+    'DoEvents
     On Error GoTo errHandler
-    frmMain.Caption = Time$ + "  V1.2-2017-Jan-01  "
+    'frmMain.Caption = Time$ + "  V1.2-2017-Jan-01  "
     Call USBfunc(other, False)
     Call USBCheck
-    If (ready = False) Then
-        Label3.Caption = "BUSY"
-    Else
-        Label3.Caption = "READY"
-    End If
     Exit Sub
 errHandler:
     Timer1.Enabled = False

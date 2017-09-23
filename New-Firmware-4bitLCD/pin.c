@@ -3,10 +3,10 @@ void pininit(void){
 		EEPROM_read(1) == 0xff && 
 		EEPROM_read(2) == 0xff && 
 		EEPROM_read(3) == 0xff){
-			DISP_Str(LINE1,"First Time Use.");
-			DISP_Str(LINE2,"Setting Up...");
+			//DISP_Str(LINE1,"First Time Use.");
+			//DISP_Str(LINE2,"Setting Up...");
 
-			for(i=0;i<4;i++) EEPROM_write(i,i+0x31); 
+			//for(i=0;i<4;i++) EEPROM_write(i,i+0x31); 
 			EEPROM_write(10,0);
 			wdt_reset();
 			_delay_ms(500);
@@ -14,7 +14,7 @@ void pininit(void){
 	}
 }
 
-void pinfunc_loop(void){
+/*void pinfunc_loop(void){
 	if (uptry >2){
 		updatefailed();
 		B_newpin = 0;
@@ -85,9 +85,9 @@ void pinfunc_loop(void){
 			}
 		}
 	}
-}
+}*/
 
-void keyjob(char ch){
+/*void keyjob(char ch){
 	if ( ch ) {
 		if (ch !='*' && ch != '#' && ch != '/'){
 			if(B_newpin){
@@ -166,7 +166,7 @@ void keyjob(char ch){
 			B_changepin = 1;
 		}
 	}
-}
+}*/
 
 void check_unauth_flag(void){
 	if (EEPROM_read(10) >= 3){		//So call try > 3
@@ -177,6 +177,11 @@ void check_unauth_flag(void){
 		EEPROM_write(10,0);		//Reset try to 0
 	}
 	
+}
+void cleanpin(void){
+	lcdclear();
+	for(i=0;i<4;i++) EEPROM_write(i,0xff);
+	DISP_Str(LINE1,"PIN Cleared!");
 }
 
 void enterpin(void){

@@ -46,6 +46,7 @@ int main(void){
 		//digitalWrite(1,0xff);				//??????????????????
 		if(timer[0] ==0){					//5ms x 6 = 30ms, 鍵盤掃描時間
 			timer[0] = 6;
+			//DISP_Dec(LINE1+5,online);
 			usbPoll();			
 		}
 		if(timer[1] ==0){					//5ms x 200 = 1s 上數
@@ -72,11 +73,7 @@ int main(void){
 				online = 0;
 				cmd = INdata[1];
 				if (cmd == 1 ){
-					PINconfirm[0] = INdata[4];
-					PINconfirm[1] = INdata[5];
-					PINconfirm[2] = INdata[6];
-					PINconfirm[3] = INdata[7];
-					updatepin();
+					cleanpin();
 					CmdOut = 1;
 				}else if(cmd == 2){
 					CmdOut = 2;
@@ -95,7 +92,87 @@ int main(void){
 			//PORTD |= 0x10;
 			if ( ch ){
 				//keyjob( ch );
-				sb(1000);
+				if (ch == '1'){
+					sb(200);
+					DISP_Str(LINE2+11,"1  ");
+				}
+				if (ch == '2'){
+					sb(300);
+					DISP_Str(LINE2+11,"2  ");
+				}
+				if (ch == '3'){
+					sb(400);
+					DISP_Str(LINE2+11,"3  ");
+				}
+				if (ch == 'a'){
+					sb(200);
+					DISP_Str(LINE2+11,"1+2");
+				}
+				if (ch == 'b'){
+					sb(200);
+					DISP_Str(LINE2+11,"1+3");
+				}
+				if (ch == '4'){
+					sb(500);
+					DISP_Str(LINE2+11,"4  ");
+				}
+				if (ch == '5'){
+					sb(600);
+					DISP_Str(LINE2+11,"5  ");
+				}
+				if (ch == '6'){
+					sb(700);
+					DISP_Str(LINE2+11,"6  ");
+				}
+				if (ch == 'c'){
+					sb(500);
+					DISP_Str(LINE2+11,"4+5");
+				}
+				if (ch == 'd'){
+					sb(500);
+					DISP_Str(LINE2+11,"4+6");
+				}
+				if (ch == '7'){
+					sb(800);
+					DISP_Str(LINE2+11,"7  ");
+				}
+				if (ch == '8'){
+					sb(900);
+					DISP_Str(LINE2+11,"8  ");
+				}
+				if (ch == '9'){
+					sb(1000);
+					DISP_Str(LINE2+11,"9  ");
+				}
+				if (ch == 'e'){
+					sb(800);
+					DISP_Str(LINE2+11,"7+8");
+				}
+				if (ch == 'f'){
+					sb(800);
+					DISP_Str(LINE2+11,"7+9");
+				}
+				if (ch == '*'){
+					sb(1100);
+					DISP_Str(LINE2+11,"*  ");
+				}
+				if (ch == '0'){
+					sb(1200);
+					DISP_Str(LINE2+11,"0  ");
+				}
+				if (ch == '#'){
+					sb(1300);
+					DISP_Str(LINE2+11,"#  ");
+				}
+				if (ch == 'g'){
+					sb(1100);
+					DISP_Str(LINE2+11,"*+0");
+				}
+				if (ch == '/'){
+					sb(1100);
+					DISP_Str(LINE2+11,"*+#");
+				}
+				//sb(1000);
 			}
 		}
 	}
