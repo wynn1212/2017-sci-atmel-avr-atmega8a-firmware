@@ -125,6 +125,14 @@ Begin VB.Form frmMain
       Top             =   3480
       Width           =   2200
    End
+   Begin VB.Label Label2 
+      Caption         =   "Label2"
+      Height          =   375
+      Left            =   4320
+      TabIndex        =   10
+      Top             =   1920
+      Width           =   4455
+   End
    Begin VB.Label Label4 
       Caption         =   "RGB"
       Height          =   372
@@ -249,9 +257,9 @@ Private Sub USBfunc(ByVal mode As String, ByVal IsWrite As Boolean)
                 ElseIf (mode = "led") Then
                     
                 Else
-                    'Label2.Caption = ""     'Clear Label2.Caption
+                    Label2.Caption = ""     'Clear Label2.Caption
                     ReadData datain
-                    'For i = 0 To 8: Label2.Caption = Label2.Caption & datain(i): Next i
+                    For i = 0 To 8: Label2.Caption = Label2.Caption & datain(i): Next i
                     CloseUsbDevice
                     Label1.Caption = "ON LINE"
                     ff.FillStyle = 0

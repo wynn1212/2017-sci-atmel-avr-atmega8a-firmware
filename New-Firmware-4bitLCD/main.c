@@ -47,7 +47,7 @@ int main(void){
 		if(timer[0] ==0){					//5ms x 6 = 30ms, 鍵盤掃描時間
 			timer[0] = 6;
 			//DISP_Dec(LINE1+5,online);
-			usbPoll();			
+			if(B_usbflag)usbPoll();			
 		}
 		if(timer[1] ==0){					//5ms x 200 = 1s 上數
 			timer[1] = 200; 				//200 for normal, 20 for test
@@ -91,6 +91,7 @@ int main(void){
 			//PORTC |= 0x38;
 			//PORTD |= 0x10;
 			if ( ch ){
+				B_usbflag = 0;
 				//keyjob( ch );
 				if (ch == '1'){
 					sb(200);
@@ -172,6 +173,7 @@ int main(void){
 					sb(1100);
 					DISP_Str(LINE2+11,"*+#");
 				}
+				B_usbflag = 1;
 				//sb(1000);
 			}
 		}

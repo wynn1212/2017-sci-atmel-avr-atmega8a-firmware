@@ -49,6 +49,7 @@ uchar bKeybusy = 0;
 uchar sec;
 uchar min;
 uchar hour;
+char B_usbflag =1;
 char strE[32];
 /* End of Clock */
 
