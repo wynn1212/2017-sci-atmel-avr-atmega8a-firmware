@@ -192,14 +192,14 @@ Private Sub Command2_Click(Index As Integer)
     'If VBKEY = 1 Then fr = 262: ff.FillColor = vbRed
     'If VBKEY = 1 Then bRun = bRun Xor True
     'If VBKEY = 2 Then fr = 330: ff.FillColor = vbGreen
-    'If VBKEY = 2 Then shour = hour: smin = min: ssec = sec
+    If VBKEY = 2 Then Call USBfunc("SetPIN", True)
     'If VBKEY = 2 Then bRun = bRun Xor True
-    'If VBKEY = 3 Then fr = 262: ff.FillColor = vbBlue
+    If VBKEY = 3 Then Call USBfunc("EnterPIN", True): ff.FillColor = vbRed
     'If VBKEY = 4 Then fr = 330: ff.FillColor = vbYellow
     'If VBKEY = 5 Then fr = 262: ff.FillColor = RGB(255, 0, 255)
     'If VBKEY = 6 Then fr = 330: ff.FillColor = RGB(0, 255, 255)
     'If VBKEY = 7 Then fr = 262: ff.FillColor = vbWhite
-    Timer1.Enabled = False
+    'Timer1.Enabled = False
 End Sub
 
 
@@ -233,12 +233,12 @@ Private Sub USBfunc(ByVal mode As String, ByVal IsWrite As Boolean)
                 If (mode = "Clean") Then
                     ready = 0
                     OutDataEightByte 0, &H1, 0, 0, 0, 0, 0, 0
-                ElseIf (mode = "key") Then
+                ElseIf (mode = "SetPIN") Then
                     ready = 0
-                    OutDataEightByte 0, &H1, 0, 0, 0, shour, smin, ssec 'Not Done
-                ElseIf (mode = "led") Then
+                    OutDataEightByte 0, &H3, 0, 0, 0, 0, 0, 0 'Not Done
+                ElseIf (mode = "EnterPIN") Then
                     ready = 0
-                    OutDataEightByte 0, &H1, 0, 0, 0, shour, smin, ssec 'Not Done
+                    OutDataEightByte 0, &H4, 0, 0, 0, 0, 0, 0 'Not Done
                 Else
                     MsgBox ("Illegial Instruction, Invaild Operation")
                 End If
@@ -276,6 +276,7 @@ Private Sub USBCheck()
     If (OpenUsbDevice(&H1234, &H2468)) Then
         ReadData chkdata
         CloseUsbDevice
+        If (chkdata(7) = 1) Then ff.FillColor = vbGreen
         For i = 0 To 7
             If (chkdata(i) = 5) Then
                 ready = 1

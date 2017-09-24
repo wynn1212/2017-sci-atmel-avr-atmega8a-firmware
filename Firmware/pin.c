@@ -14,7 +14,7 @@ void pininit(void){
 	}
 }
 
-/*void pinfunc_loop(void){
+void pinfunc_loop(void){
 	if (uptry >2){
 		updatefailed();
 		B_newpin = 0;
@@ -28,7 +28,16 @@ void pininit(void){
 	} else if (B_confirmpin) {	
 		confirmpin();
 	} else {
-		enterpin();
+		if (B_pinreq){
+			B_mainmenu = 0;
+			enterpin();
+		}
+		if (B_changereq && !B_changepin && !B_newpin && !B_confirmpin){
+			lcdclear();
+			clearpin();
+			B_newpin = 1;
+			B_mainmenu = 0;
+		}
 	}
 	if (okbutton){
 		static char try = 0;
@@ -85,9 +94,9 @@ void pininit(void){
 			}
 		}
 	}
-}*/
+}
 
-/*void keyjob(char ch){
+void keyjob(char ch){
 	if ( ch ) {
 		if (ch !='*' && ch != '#' && ch != '/'){
 			if(B_newpin){
@@ -160,13 +169,13 @@ void pininit(void){
 			}
 		} else if (ch == '#'){
 			okbutton = 1;
-		} else if (ch == '/' && !B_changepin && !B_newpin && !B_confirmpin){
+		} /*else if (ch == '/' && !B_changepin && !B_newpin && !B_confirmpin){
 			lcdclear();
 			clearpin();
 			B_changepin = 1;
-		}
+		}*/
 	}
-}*/
+}
 
 void check_unauth_flag(void){
 	if (EEPROM_read(10) >= 3){		//So call try > 3
@@ -191,23 +200,30 @@ void enterpin(void){
 
 void correctpin(void){
 	DISP_Str(LINE2,"!Greeting, User!");
-	_delay_ms(100);
+	/*_delay_ms(100);
 	sb(1000);
 	_delay_ms(50);
-	sb(2000);
+	sb(2000);*/
 	wait_2s();
 	DISP_Str(LINE2,"                ");
+	lcdclear();
+	B_mainmenu = 1;
+	B_pinreq = 0;
+	B_pinok = 1;
 }
 
 void wrongpin(void){
 	DISP_Str(LINE2,"  !WRONG  PIN!  ");
 	sb(2000);
-	_delay_ms(50);
-	sb(2000);
-	_delay_ms(50);
-	sb(2000);
+	//_delay_ms(50);
+	//sb(2000);
+	//_delay_ms(50);
+	//sb(2000);
 	wait_2s();
 	DISP_Str(LINE2,"                ");
+	lcdclear();
+	B_mainmenu = 1;
+	B_pinreq = 0;
 }
 
 void clearpin(void){
@@ -270,11 +286,13 @@ void updatepin(void){
 	DISP_Str(LINE2,"Please Wait...");
 	for(i=0;i<4;i++)EEPROM_write(i,PINconfirm[i]);
 	wdt_reset();
-	_delay_ms(200);
+	//_delay_ms(200);
 	DISP_Str(LINE1,"!Update SUCCEED!");
 	DISP_Str(LINE2,"Returning  Home.");
 	wait_2s();
 	lcdclear();
+	B_changereq = 0;
+	B_mainmenu = 1;
 }
 
 void updatefailed(void){
