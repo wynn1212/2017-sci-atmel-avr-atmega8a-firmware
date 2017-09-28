@@ -6,18 +6,22 @@ static uchar    bytesRemaining;
  * the device. For more information see the documentation in usbdrv/usbdrv.h.
  * E.X. PC <= Atmega8
  */
- 
+ unsigned char i; 
  #define BASE 0x30
 uchar   usbFunctionRead(uchar *data, uchar len){
 	if(len > bytesRemaining)len = bytesRemaining;
 	if(currentAddress == 0){
 		if ( CmdOut == 1 ) {  //Recived Successful.
-			for ( i=0;i<8;i++) OUTdata[i] = 5;
-			for ( i=0;i<8;i++) *(data+i) = OUTdata[i];		
+			if(B_pinok){
+				for ( i=0;i<8;i++) OUTdata[i] = 1;
+				for ( i=0;i<8;i++) *(data+i) = OUTdata[i];
+				B_pinok = 0;
+			} else{
+				for ( i=0;i<8;i++) OUTdata[i] = 5;
+				for ( i=0;i<8;i++) *(data+i) = OUTdata[i];		
+			}
 		}else if( CmdOut == 2) { //Sent Time
-			OUTdata[0] = 5;OUTdata[1] = 1; OUTdata[2] = 0; OUTdata[3] = 0;
-			OUTdata[4] = 0;OUTdata[5] = hour; OUTdata[6] = min; OUTdata[7] = sec;
-			for ( i=0;i<8;i++) *(data+i) = OUTdata[i];
+
 		}else if( CmdOut == 3){
 			for ( i=0;i<8;i++) OUTdata[i] = 1;
 			for ( i=0;i<8;i++) *(data+i) = OUTdata[i];

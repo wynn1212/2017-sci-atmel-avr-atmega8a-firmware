@@ -62,3 +62,86 @@ uchar KeyConvert( char r, char c ) {
 	if (c == 0x02 && r == 0x03) val='/';
 	return val;
 }
+
+void keypadmain(char ch){
+	if (ch == '1'){
+		sb(261);
+		DISP_Str(LINE2+11,"1  ");
+	}
+	if (ch == '2'){
+		sb(293);
+		DISP_Str(LINE2+11,"2  ");
+	}
+	if (ch == '3'){
+		sb(329);
+		DISP_Str(LINE2+11,"3  ");
+	}
+	if (ch == 'a'){
+		sb(277);
+		DISP_Str(LINE2+11,"1+2");
+	}
+	if (ch == 'b'){
+		sb(311);
+		DISP_Str(LINE2+11,"1+3");
+	}
+	if (ch == '4'){
+		sb(349);
+		DISP_Str(LINE2+11,"4  ");
+	}
+	if (ch == '5'){
+		sb(392);
+		DISP_Str(LINE2+11,"5  ");
+	}
+	if (ch == '6'){
+		sb(440);
+		DISP_Str(LINE2+11,"6  ");
+	}
+	if (ch == 'c'){
+		sb(370);
+		DISP_Str(LINE2+11,"4+5");
+	}
+	if (ch == 'd'){
+		sb(415);
+		DISP_Str(LINE2+11,"4+6");
+	}
+	if (ch == '7'){
+		sb(494);
+		DISP_Str(LINE2+11,"7  ");
+	}
+	if (ch == '8'){
+		sb(523);
+		DISP_Str(LINE2+11,"8  ");
+	}
+	if (ch == '9'){
+		sb(587);
+		DISP_Str(LINE2+11,"9  ");
+	}
+	if (ch == 'e'){
+		sb(466);
+		DISP_Str(LINE2+11,"7+8");
+	}
+	if (ch == 'f'){
+		sb(880);
+		DISP_Str(LINE2+11,"7+9");
+	}
+	if (ch == '*'){
+		sb(659);
+		DISP_Str(LINE2+11,"*  ");
+	}
+	if (ch == '0'){
+		sb(698);
+		DISP_Str(LINE2+11,"0  ");
+	}
+	if (ch == '#'){
+		sb(784);
+		DISP_Str(LINE2+11,"#  ");
+	}
+	if (ch == 'g'){
+		sb(987);
+		DISP_Str(LINE2+11,"*+0");
+	}
+	if (ch == '/'){
+		sb(1046);
+		DISP_Str(LINE2+11,"*+#");
+	}
+}

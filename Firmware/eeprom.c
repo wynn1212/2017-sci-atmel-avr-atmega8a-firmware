@@ -55,7 +55,6 @@ void eeprom_string_read(int record){
 	uchar i = 0, addr = 0;
 	char ByteOfData;
 	if (record > 15){
-//		printi("E:max (15)\n\r",0);
 	}else{
 		addr = record*32;
 		do {

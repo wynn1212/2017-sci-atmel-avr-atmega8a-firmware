@@ -3,16 +3,13 @@
 #include <util/delay.h> 					/* for _delay_ms() */
 
 /*   =======  硬體接腳的定義  =============  */
-#define RS 7  
-#define E 5
-#define dT 30
+
 
 void LCD_E( char b );
 void LCD_RW( char b );
 void LCD_RS( char b );
 void LCD_CMD(char ch);
 void LCD_COM(char cmd );
-//const char BITLEN = 8;						//4-bit mode 
 const uchar picture1[6][8] ={	{0x1F,0x10,0x10,0x10,0x11,0x12,0x14,0x18},
 								{0x1F,0x04,0x0A,0x11,0x00,0x04,0x0A,0x11}, 
 								{0x1F,0x01,0x01,0x01,0x11,0x09,0x05,0x03},                              	                            

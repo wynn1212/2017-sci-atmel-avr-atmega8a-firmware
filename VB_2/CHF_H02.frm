@@ -23,6 +23,22 @@ Begin VB.Form frmMain
    ScaleMode       =   0  '使用者自訂
    ScaleWidth      =   9716.548
    StartUpPosition =   2  '螢幕中央
+   Begin VB.CheckBox Check1 
+      Caption         =   "偷喵?"
+      Height          =   270
+      Left            =   3240
+      TabIndex        =   12
+      Top             =   3360
+      Width           =   1335
+   End
+   Begin VB.TextBox Text1 
+      Enabled         =   0   'False
+      Height          =   390
+      Left            =   1320
+      TabIndex        =   11
+      Top             =   3360
+      Width           =   1695
+   End
    Begin VB.CommandButton Command2 
       BackColor       =   &H00FFFFFF&
       Caption         =   "K7"
@@ -179,6 +195,7 @@ Private Declare Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
 Dim VBKEY, fr, c, hour, min, sec, shour, smin, ssec As Integer
 Dim chkdata(10) As Byte
 Dim datain(10) As Byte
+Dim pin As Byte
 Dim bRun, ready As Boolean
 
 Private Sub Command1_Click(Index As Integer)
@@ -192,7 +209,7 @@ Private Sub Command2_Click(Index As Integer)
     'If VBKEY = 1 Then fr = 262: ff.FillColor = vbRed
     'If VBKEY = 1 Then bRun = bRun Xor True
     'If VBKEY = 2 Then fr = 330: ff.FillColor = vbGreen
-    If VBKEY = 2 Then Call USBfunc("SetPIN", True)
+    If VBKEY = 2 Then Text1.Enabled = True
     'If VBKEY = 2 Then bRun = bRun Xor True
     If VBKEY = 3 Then Call USBfunc("EnterPIN", True): ff.FillColor = vbRed
     'If VBKEY = 4 Then fr = 330: ff.FillColor = vbYellow
@@ -211,7 +228,7 @@ Private Sub Form_Unload(Cancel As Integer)
     On Error GoTo errHandler
     DoEvents
     If OpenUsbDevice(&H1234, &H2468) Then
-        OutDataEightByte 0, &H3, 0, 0, 0, 0, 0, 0
+        OutDataEightByte 0, &H9, 0, 0, 0, 0, 0, 0
         CloseUsbDevice
     End If
     Timer1.Enabled = True ': Timer2.Enabled = False
@@ -235,7 +252,7 @@ Private Sub USBfunc(ByVal mode As String, ByVal IsWrite As Boolean)
                     OutDataEightByte 0, &H1, 0, 0, 0, 0, 0, 0
                 ElseIf (mode = "SetPIN") Then
                     ready = 0
-                    OutDataEightByte 0, &H3, 0, 0, 0, 0, 0, 0 'Not Done
+                    OutDataEightByte 0, &H3, 0, 0, 0, 0, 0, pin 'Not Done
                 ElseIf (mode = "EnterPIN") Then
                     ready = 0
                     OutDataEightByte 0, &H4, 0, 0, 0, 0, 0, 0 'Not Done
@@ -287,12 +304,31 @@ Private Sub USBCheck()
 End Sub
 
 
+Private Sub Text1_KeyPress(KeyAscii As Integer)
+    Dim lenth As Byte
+    If (KeyAscii > 47 And KeyAscii < 59) Then
+        pin = KeyAscii
+        Call USBfunc("SetPIN", True)
+    End If
+    lenth = lenth + 1
+    If (lenth = 5) Then
+        lenth = 0
+        Text1.Text = ""
+        Text1.Enabled = False
+    End If
+End Sub
+
 Private Sub Timer1_Timer()                             ''讀取KEY
     'DoEvents
     On Error GoTo errHandler
     'frmMain.Caption = Time$ + "  V1.2-2017-Jan-01  "
     Call USBfunc(other, False)
     Call USBCheck
+    If (Check1.Value = 1) Then
+        Text1.PasswordChar = ""
+    Else
+        Text1.PasswordChar = "*"
+    End If
     Exit Sub
 errHandler:
     Timer1.Enabled = False

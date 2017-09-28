@@ -1,4 +1,21 @@
-
+/*
+	I/O PIN Direction			_______________
+	(1)[PIN21]PC6(!RESET)------|O	   U	   |--(SCL/ADC5)PC5[PIN21](28)
+	(2)[PIN0]PD0(RxD)----------|			   |--(SDA/ADC4)PC4[PIN20](27)
+	(3)[PIN1]PD1(TxD)----------|			   |------(ADC3)PC3[PIN19](26)
+	(4)[PIN2]PD2(INT0)---------|			   |------(ADC2)PC2[PIN18](25)
+	(5)[PIN3]PD3(INT1)---------|			   |------(ADC1)PC1[PIN17](24)
+	(6)[PIN4]PD4(XCK/T0)-------|			   |------(ADC0)PC0[PIN16](23)
+	(7)VCC---------------------|   Atmel AVR   |------------------AGND(22)
+	(8)GND---------------------|  ATMEGA8A-PU  |------------------AREF(21)
+	(9)[PIN14]PB6(XT1/TOSC1)---|			   |------------------AVCC(20)
+	(10)[PIN15]PB7(XT2/TOSC2)--|			   |-------(SCK)PB5[PIN13](19)
+	(11)[PIN5]PD5(T1)----------|			   |------(MISO)PB4[PIN12](18)
+	(12)[PIN6]PD6(AIN0)--------|			   |--(OC2/MOSI)PB3[PIN11](17)
+	(13)[PIN7]PD7(AIN1)--------|		  	   |---(SS/OC1B)PB2[PIN10](16)
+	(14)[PIN8]PB0(ICP)---------|_______________|-------(OC1A)PB1[PIN9](15)
+	Note: return 0 if LOW, 1 if HIGH 
+*/
 
 void digitalWrite( unsigned char, unsigned char );	//pin no, val=0,1,0xFF
 void pinMode(unsigned char, unsigned char );			//pin no, 0=input, 1=output
